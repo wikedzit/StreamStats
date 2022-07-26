@@ -15,7 +15,7 @@
                         <p class="col-md-8 fs-4">
                             Have a quick look at how the channels you watch compare to the top 1000 Twitch live streams.
                         </p>
-                        <a class="btn btn-primary btn-lg" type="button">Sign in with Twitch</a>
+                        <a :href="getRedirectUrl()" class="btn btn-primary btn-lg" type="button">Sign in with Twitch</a>
                     </div>
                 </div>
 
@@ -39,3 +39,40 @@
         </main>
     </div>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            error: null,
+            twitch_auth_creds: {
+                response_type: 'code',
+                client_id: import.meta.env.VITE_TWITCH_CLIENT_ID,
+                redirect_uri: import.meta.env.VITE_TWITCH_REDIRECT_URI,
+                scope: import.meta.env.VITE_TWITCH_SCOPE
+            }
+        }
+    },
+
+    mounted() {
+        const access_details = document.location.search;
+        if (access_details) {
+            const callback = "http://localhost:8000/api/auth/callback"+access_details;
+            this.loading = true;
+            axios.get(callback)
+                .then(response => {
+                    router.push({name: 'dashboard'})
+                })
+                .catch(error => console.log(error))
+        }
+    },
+
+    methods: {
+        getRedirectUrl() {
+            const url = import.meta.env.VITE_TWITCH_AUTH_URL;
+            const params = new URLSearchParams(this.twitch_auth_creds).toString();
+            return url+"?"+ params;
+        },
+    }
+}
+</script>
