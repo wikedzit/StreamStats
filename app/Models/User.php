@@ -18,9 +18,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'twitch_id' , 'access_token', 'refresh_token'
     ];
 
     /**
@@ -29,8 +27,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'access_token', 'refresh_token', 'email'
     ];
 
     /**
@@ -38,7 +35,14 @@ class User extends Authenticatable
      *
      * @var array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected $casts = [];
+
+    public function getProfile() {
+        // TODO it is importan to filter out what we are returning and formating it if necessary
+        return $this;
+    }
+
+    public function getAccessToken() {
+        return $this->access_token ?? "";
+    }
 }
