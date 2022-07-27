@@ -8,6 +8,34 @@ use Illuminate\Support\Facades\Log;
 
 class Twitch
 {
+    public static function authorizeApp() {
+        try {
+            $url = sprintf("%s/%s", config('app.twitch.auth_url'), 'token');
+            $credentials = [
+                'client_id'     => config('app.twitch.client_id'),
+                'client_secret' => config('app.twitch.secret'),
+                'grant_type'    => "client_credentials"
+            ];
+            $response = Http::asForm()->post($url, $credentials);
+            if ($response->ok()) {
+                $access_token = $response->json('access_token');
+                if (!empty($access_token)) {
+                    config(['app.twitch.token' => $access_token]);
+                    return $access_token;
+                } else {
+                    Log::error("TWITCH APP Authorization failed: Missing APP Access Token");
+                    throw new \Exception($response->body());
+                }
+            } else {
+                Log::error("TWITCH APP Authorization failed:". $response->body());
+                throw new \Exception("TWITCH APP Authorization failed:");
+            }
+        } catch (\Exception $exception) {
+            Log::error("TWITCH APP Authorization failed:". $exception->getMessage());
+            throw $exception;
+        }
+    }
+
     public static function getStreams(string $endpoint, $headers=[], $params=[]) {
         try {
             $endpoint = trim($endpoint, "/");
@@ -55,31 +83,11 @@ class Twitch
         return self::getStreams('/streams/followed', $headers, $params);
     }
 
-    public static function authorizeApp() {
-        try {
-            $url = sprintf("%s/%s", config('app.twitch.auth_url'), 'token');
-            $credentials = [
-                'client_id'     => config('app.twitch.client_id'),
-                'client_secret' => config('app.twitch.secret'),
-                'grant_type'    => "client_credentials"
-            ];
-            $response = Http::asForm()->post($url, $credentials);
-            if ($response->ok()) {
-                $access_token = $response->json('access_token');
-                if (!empty($access_token)) {
-                    config(['app.twitch.token' => $access_token]);
-                    return $access_token;
-                } else {
-                    Log::error("TWITCH APP Authorization failed: Missing APP Access Token");
-                    throw new \Exception($response->body());
-                }
-            } else {
-                Log::error("TWITCH APP Authorization failed:". $response->body());
-                throw new \Exception("TWITCH APP Authorization failed:");
-            }
-        } catch (\Exception $exception) {
-            Log::error("TWITCH APP Authorization failed:". $exception->getMessage());
-            throw $exception;
+    public static function loadStreams(bool $isFollowed, int $first = 100, string $cursor="") {
+        if ($isFollowed) {
+            return Twitch::getUserFollowedStreams($first, $cursor);
+        } else {
+            return Twitch::getGeneralStreams($first, $cursor);
         }
     }
 }

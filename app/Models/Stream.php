@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\LoadStreams;
 
 class Stream extends Model
 {
-    use HasFactory;
+    use HasFactory, LoadStreams;
 
     public $incrementing    = false;
     protected $primaryKey   = 'stream_id';
