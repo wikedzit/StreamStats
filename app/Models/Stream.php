@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\LoadStreams;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Stream extends Model
 {
@@ -52,6 +54,48 @@ class Stream extends Model
                 Stream::create($row);
             }
         } catch (\Exception $exception) {
+            Log::error("StreamRecordsUpdate FAILED:- ". $exception->getMessage());
+        }
+    }
+
+    // TODO move all the queries in this controller to a Trait/Model to keep it thin
+    public static function gamesStats() {
+        try {
+            $games = DB::table('streams')
+                ->select(DB::raw('count(*) as streams_count, game_name'))
+                ->groupBy('game_name')
+                ->orderBy('streams_count', 'DESC')
+                ->limit(10)
+                ->get()->toArray();
+            return $games;
+        } catch (\Exception $exception) {
+            Log::error("GAMES STAT FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function topGames() {
+        try {
+            $top_games = DB::table('streams')
+                ->select(DB::raw('SUM(viewer_count) as view_count, game_name'))
+                ->groupBy('game_name')
+                ->orderBy('view_count', 'DESC')
+                ->limit(10)
+                ->get()->toArray();
+            return $top_games;
+        } catch (\Exception $exception) {
+            Log::error("TOP GAMES STATS FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function viewersMedian() {
+        try {
+            $views= Stream::pluck('viewer_count')->median();
+            return ['viewers_median' => $views ];
+        } catch (\Exception $exception) {
+            Log::error("TOP GAMES STATS FAILED:- ". $exception->getMessage());
+            return [];
         }
     }
 }
