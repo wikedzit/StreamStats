@@ -2,9 +2,11 @@
 import ViewerMedian from "../components/ViewerMedian.vue";
 import TopGames from "../components/TopGames.vue";
 import GameStreams from "../components/GameStreams.vue";
+import StreamGapToTop from "../components/StreamGapToTop.vue";
 
 export default {
     components: {
+        StreamGapToTop,
         GameStreams,
         TopGames,
         ViewerMedian,
@@ -43,17 +45,20 @@ export default {
     <div class="container h-100 d-flex justify-content-center align-items-center">
         <div class="container w-70">
             <h3>DashBoard</h3>
-            <div class="row">
-                <div class="col-6">
+            <div class="row align-items-md-stretch">
+                <div class="col-md-6">
                     <ViewerMedian v-if="stats.median!=null" :median="stats.median"></ViewerMedian>
                 </div>
+                <div class="col-md-6">
+                    <StreamGapToTop v-if="stats.gaptotop!=null" :gapdata="stats.gaptotop"></StreamGapToTop>
+                </div>
             </div>
-            <div class="row">
-                <div class="col-4">
+            <div class="row pt-3">
+                <div class="col-6">
                     <GameStreams v-if="stats.gamestreams!=null" :gamestreams="stats.gamestreams"></GameStreams>
                 </div>
 
-                <div class="col-4">
+                <div class="col-6">
                     <TopGames v-if="stats.topgames!=null" :topgames="stats.topgames"></TopGames>
                 </div>
             </div>

@@ -62,10 +62,12 @@ class Stream extends Model
         $median = self::viewersMedian();
         $topgames = self::topGames();
         $gamestreams = self::gameStreams();
+        $gaptotop = self::leastStreamGapToTopStream();
         $stats = [
             'median' => $median,
             'topgames' => $topgames,
-            'gamestreams' => $gamestreams
+            'gamestreams' => $gamestreams,
+            'gaptotop'=>$gaptotop
         ];
         return $stats;
     }
@@ -107,6 +109,21 @@ class Stream extends Model
             return $viewers_median;
         } catch (\Exception $exception) {
             Log::error("TOP GAMES STATS FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function leastStreamGapToTopStream() {
+        try {
+            $topViewCounts = DB::table('streams')->min('viewer_count');
+            $data = Stream::loadStreams(true,100,[],"", true);
+            $followedStream = end($data);
+            return [
+                'title' => $followedStream['title'],
+                'gap' => $followedStream['viewer_count'] - $topViewCounts
+            ];
+        } catch (\Exception $exception) {
+            Log::error("STREAM GAP TO TOP STATS FAILED:- ". $exception->getMessage());
             return [];
         }
     }

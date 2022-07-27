@@ -14,13 +14,11 @@ export default {
 }
 </script>
 <template>
-    <div class="card bg-info">
-        <div class="card-body">
-            <h5 class="card-title">Stream Viewers</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Median</h6>
-            <div class="card-text">
-                <h1>{{  viewer_median  }}</h1>
-            </div>
+    <div class="h-100 p-3 text-bg-info rounded-3">
+        <h5 class="card-title">Stream Viewers</h5>
+        <h6 class="card-subtitle mb-2 text-muted">Median</h6>
+        <div class="card-text">
+            <h1>{{  viewer_median  }}</h1>
         </div>
     </div>
 </template>
