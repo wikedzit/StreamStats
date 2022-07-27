@@ -2,12 +2,14 @@
 
 namespace App\Http\Middleware;
 
+use App\Integrations\Twitch;
 use Closure;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CheckToken
 {
@@ -30,14 +32,21 @@ class CheckToken
         $decoded = JWT::decode($token, new Key(config('auth.jwt.key'), 'HS256'));
         if(!empty($decoded) && !empty($decoded->user_id)) {
             $user = User::where('twitch_id', $decoded->user_id)->first();
-
             // At this point we also need to confirm the validity of Twitch token just to be user this user access is
             // still valid even if the session is not expired
+            if (Twitch::hasActiveTwitchAccess($user)) {
+                // Authenticate the user so that the flow remain valid when accessing next resources
+                Auth::login($user);
+            } else {
+                $user->update([
+                    'access_token'  => "",
+                    'refresh_token' => ""
+                ]);
+                return response()->json(['message' => "Invalid Access"], 401);
+            }
 
-            // Authenitcate the user so that the flow remain valid when accessing next resources
-            Auth::login($user);
         } else {
-            return response()->json(['message' => "Invalid token"], 403);
+            return response()->json(['message' => "Invalid token"], 401);
         }
         return $next($request);
     }

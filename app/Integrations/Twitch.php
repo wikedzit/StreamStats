@@ -2,21 +2,18 @@
 
 namespace App\Integrations;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class Twitch
 {
-    public static function isValidTwitchUserToken(string $token) {
+    public static function hasActiveTwitchAccess(User $user) {
         try {
-            If (!Auth::check()) {
-                return false;
-            }
-
             $url = sprintf("%s/%s", config('app.twitch.auth_url'), 'validate');
             $response = Http::withHeaders([
-                'Authorization' => sprintf("OAuth %s", $token)
+                'Authorization' => sprintf("OAuth %s", $user->access_token)
             ])->get($url);
 
             if ($response->ok()) {
@@ -24,7 +21,6 @@ class Twitch
                 $user_id    =  $response->json('user_id');
 
                 if (!empty($client_id)  && !empty($user)) {
-                    $user = Auth::user();
                     $validity = $user->twitch_id == $user_id && config('app.twitch.client_id') == $client_id;
                     return $validity;
                 }
