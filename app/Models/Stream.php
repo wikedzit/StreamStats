@@ -65,13 +65,18 @@ class Stream extends Model
         $gaptotop = self::leastStreamGapToTopStream();
         $topstreams = self::getTopStreams();
         $followedstreams = self::userFollowedStreams();
+        $sharedtags = self::getSharedTags();
+        $streamcounts = self::getStreamCountPerStartHour();
 
         $stats = [
             'median' => $median,
             'topgames' => $topgames,
             'gamestreams' => $gamestreams,
             'gaptotop'=>$gaptotop,
-            'topstreams' => $topstreams
+            'topstreams' => $topstreams,
+            'followedstreams' => $followedstreams,
+            'sharedtags' => $sharedtags,
+            'streamcounts' => $streamcounts
         ];
 
         return $stats;
@@ -155,6 +160,54 @@ class Stream extends Model
             return $results;
         } catch (\Exception $exception) {
             Log::error("USER FOLLOWED STREAM STATS FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function getSharedTags() {
+        try {
+            $data = Stream::loadStreams(true,100,[],"", true);
+            $userTags = [];
+            foreach($data as $datum) {
+                if (!empty($datum['tag_ids'])) {
+                    if (is_array($datum['tag_ids'])) {
+                        $userTags=array_merge($userTags, $datum['tag_ids']);
+                    }else {
+                        $userTags[] = $datum['tag_ids'];
+                    }
+                }
+            }
+
+            $topTags =[];
+            $tagIds = Stream::pluck('tag_ids')->toArray();
+            foreach ($tagIds as $tagId) {
+                if(!empty($tagId)) {
+                    $tags = explode(',', $tagId);
+                    $topTags=array_merge($topTags, $datum['tag_ids']);
+                }
+            }
+            $sharedTags = array_intersect($topTags, $userTags);
+            return $sharedTags;
+        } catch (\Exception $exception) {
+            Log::error("SHARED TAGS STATS FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function getStreamCountPerStartHour() {
+        try {
+            $stream_count = DB::table('streams')
+                ->select(DB::raw('count(*) as stream_count,
+                   HOUR(DATE_ADD(
+                           DATE_FORMAT(streams.started_at, "%Y-%m-%d %H:00:00"),
+                           INTERVAL IF(MINUTE(streams.started_at) < 30, 0, 1) HOUR
+                       )) AS start_hour'))
+                ->groupBy('start_hour')
+                ->orderBy('start_hour', 'DESC')
+                ->get()->toArray();
+            return $stream_count;
+        } catch (\Exception $exception) {
+            Log::error("STREAM COUNT START HOUR STATS FAILED:- ". $exception->getMessage());
             return [];
         }
     }

@@ -5,9 +5,13 @@ import GameStreams from "../components/GameStreams.vue";
 import StreamGapToTop from "../components/StreamGapToTop.vue";
 import TopStreams from "../components/TopStreams.vue";
 import UserFollowedStream from "../components/UserFollowedStream.vue";
+import SharedTags from "../components/SharedTags.vue";
+import StreamHourCount from "../components/StreamHourCount.vue";
 
 export default {
     components: {
+        StreamHourCount,
+        SharedTags,
         UserFollowedStream,
         TopStreams,
         StreamGapToTop,
@@ -49,7 +53,6 @@ export default {
         <div class="container w-70">
             <h3>DashBoard</h3>
             <div class="row align-items-md-stretch">
-
                 <div class="col-md-6">
                     <div class="h-100 p-3 rounded-3">
                         <ViewerMedian v-if="stats.median!=null" :median="stats.median"></ViewerMedian>
@@ -75,6 +78,15 @@ export default {
             <div class="row pt-3">
                 <div class="col-12">
                     <TopStreams v-if="stats.topstreams!=null" :topstreams="stats.topstreams"></TopStreams>
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="col-6">
+                    <StreamHourCount v-if="stats.streamcounts!=null" :streamcounts="stats.streamcounts"></StreamHourCount>
+                </div>
+
+                <div class="col-6">
+                    <SharedTags v-if="stats.sharedtags!=null" :sharedtags="stats.sharedtags"></SharedTags>
                 </div>
             </div>
         </div>
