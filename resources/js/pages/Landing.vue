@@ -57,7 +57,8 @@ export default {
     mounted() {
         const access_details = document.location.search;
         if (access_details) {
-            const callback = "http://localhost:8000/api/auth/callback"+access_details;
+            const base_url = import.meta.env.VITE_BASE_URL
+            const callback = base_url+"/api/auth/callback"+access_details;
             this.loading = true;
             axios.get(callback)
                 .then(response => {
