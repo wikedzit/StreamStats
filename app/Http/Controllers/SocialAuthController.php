@@ -36,7 +36,7 @@ class SocialAuthController extends Controller
             ];
 
             Auth::login($user);
-            $token = JWT::encode($tokenPayload, env('JWT_KEY'), 'HS256');
+            $token = JWT::encode($tokenPayload, config('auth.jwt.key'), 'HS256');
             $payload = [
                 'user'          => $user->getProfile(),
                 'access_token'  => $token,
@@ -47,7 +47,7 @@ class SocialAuthController extends Controller
             // Log the detailed error and return a user friendly message
             // It is also good to track exception base on their types to avoid returning generic messages
             Log::error("SocialAuthController: ". $exception->getMessage());
-            return response()->json(['message' => 'Login Failed'], 200);
+            return response()->json(['message' => 'Authentication Failed'], 200);
         }
     }
 }

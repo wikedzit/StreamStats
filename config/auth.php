@@ -108,4 +108,8 @@ return [
 
     'password_timeout' => 10800,
 
+    'jwt' => [
+        'key' => env('JWT_KEY')
+    ]
+
 ];

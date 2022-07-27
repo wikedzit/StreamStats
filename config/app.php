@@ -214,4 +214,11 @@ return [
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
+    'twitch' => [
+        'auth_url' => env('VITE_TWITCH_AUTH_URL', 'https://id.twitch.tv/oauth2/authorize'),
+        'client_id' => env('VITE_TWITCH_CLIENT_ID', ""),
+        'secret' => env('TWITCH_CLIENT_SECRET', ""),
+        'token' => env('TWITCH_APP_ACCESS_TOKEN', ""),
+    ]
+
 ];

@@ -27,7 +27,7 @@ class CheckToken
         }
 
         JWT::$leeway = 60; // $leeway in seconds
-        $decoded = JWT::decode($token, new Key(env('JWT_KEY'), 'HS256'));
+        $decoded = JWT::decode($token, new Key(config('auth.jwt.key'), 'HS256'));
         if(!empty($decoded) && !empty($decoded->user_id)) {
             $user = User::where('twitch_id', $decoded->user_id)->first();
 
