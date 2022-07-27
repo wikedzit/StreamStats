@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
@@ -25,13 +26,17 @@ class SocialAuthController extends Controller
             $user->refresh_token    =  $twitchUser->refreshToken;
             $user->save();
 
-            Auth::login($user);
+            $tokenPayload = [
+                "user_id" => $user->twitch_id
+            ];
 
-            $token = "";
+            Auth::login($user);
+            $token = JWT::encode($tokenPayload, env('JWT_KEY'), 'HS256');
             $payload = [
                 'user'          => $user->getProfile(),
                 'access_token'  => $token,
             ];
+
             return response()->json($payload, 200);
         } catch (\Exception $exception) {
             // Log the detailed error and return a user friendly message
