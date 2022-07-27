@@ -60,20 +60,26 @@ class Stream extends Model
 
     public static function getStats() {
         $median = self::viewersMedian();
-        $stats = array_merge([], $median);
+        $topgames = self::topGames();
+        $gamestreams = self::gameStreams();
+        $stats = [
+            'median' => $median,
+            'topgames' => $topgames,
+            'gamestreams' => $gamestreams
+        ];
         return $stats;
     }
 
     // TODO move all the queries in this controller to a Trait/Model to keep it thin
-    public static function gamesStats() {
+    public static function gameStreams() {
         try {
-            $games = DB::table('streams')
+            $gamestreams = DB::table('streams')
                 ->select(DB::raw('count(*) as streams_count, game_name'))
                 ->groupBy('game_name')
                 ->orderBy('streams_count', 'DESC')
                 ->limit(10)
                 ->get()->toArray();
-            return $games;
+            return $gamestreams;
         } catch (\Exception $exception) {
             Log::error("GAMES STAT FAILED:- ". $exception->getMessage());
             return [];
@@ -82,13 +88,13 @@ class Stream extends Model
 
     public static function topGames() {
         try {
-            $top_games = DB::table('streams')
+            $topgames = DB::table('streams')
                 ->select(DB::raw('SUM(viewer_count) as view_count, game_name'))
                 ->groupBy('game_name')
                 ->orderBy('view_count', 'DESC')
                 ->limit(10)
                 ->get()->toArray();
-            return $top_games;
+            return $topgames;
         } catch (\Exception $exception) {
             Log::error("TOP GAMES STATS FAILED:- ". $exception->getMessage());
             return [];
@@ -97,8 +103,8 @@ class Stream extends Model
 
     public static function viewersMedian() {
         try {
-            $views= Stream::pluck('viewer_count')->median();
-            return ['viewers_median' => $views ];
+            $viewers_median = Stream::pluck('viewer_count')->median();
+            return $viewers_median;
         } catch (\Exception $exception) {
             Log::error("TOP GAMES STATS FAILED:- ". $exception->getMessage());
             return [];

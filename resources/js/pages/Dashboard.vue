@@ -1,15 +1,17 @@
 <script>
 import ViewerMedian from "../components/ViewerMedian.vue";
+import TopGames from "../components/TopGames.vue";
+import GameStreams from "../components/GameStreams.vue";
 
 export default {
     components: {
-        ViewerMedian
+        GameStreams,
+        TopGames,
+        ViewerMedian,
     },
     data() {
         return {
-            stats: {
-                viewers_median: null
-            }
+            stats:{}
         }
     },
     created() {
@@ -41,9 +43,18 @@ export default {
     <div class="container h-100 d-flex justify-content-center align-items-center">
         <div class="container w-70">
             <h3>DashBoard</h3>
-            <div class="row mb-10">
+            <div class="row">
                 <div class="col-6">
-                    <ViewerMedian v-if="stats.viewers_median!=null" :median="stats.viewers_median"></ViewerMedian>
+                    <ViewerMedian v-if="stats.median!=null" :median="stats.median"></ViewerMedian>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <GameStreams v-if="stats.gamestreams!=null" :gamestreams="stats.gamestreams"></GameStreams>
+                </div>
+
+                <div class="col-4">
+                    <TopGames v-if="stats.topgames!=null" :topgames="stats.topgames"></TopGames>
                 </div>
             </div>
         </div>
