@@ -7,7 +7,9 @@ export default {
     },
     data() {
         return {
-            stats: null
+            stats: {
+                viewers_median: null
+            }
         }
     },
     created() {
@@ -41,7 +43,7 @@ export default {
             <h3>DashBoard</h3>
             <div class="row mb-10">
                 <div class="col-6">
-                    <ViewerMedian :median="stats.viewers_median"></ViewerMedian>
+                    <ViewerMedian v-if="stats.viewers_median!=null" :median="stats.viewers_median"></ViewerMedian>
                 </div>
             </div>
         </div>
