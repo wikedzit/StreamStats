@@ -70,7 +70,7 @@ export default {
 
     methods: {
         getRedirectUrl() {
-            const url = import.meta.env.VITE_TWITCH_AUTH_URL;
+            const url = import.meta.env.VITE_TWITCH_AUTH_URL + "/authorize";
             const params = new URLSearchParams(this.twitch_auth_creds).toString();
             return url+"?"+ params;
         },
