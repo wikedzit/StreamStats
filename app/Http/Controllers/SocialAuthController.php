@@ -10,6 +10,11 @@ use Laravel\Socialite\Facades\Socialite;
 
 class SocialAuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->skipAuthenticate = ['callback'];
+        parent::__construct();
+    }
 
     public function callback() {
         try {
