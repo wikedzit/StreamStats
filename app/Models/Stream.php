@@ -63,12 +63,16 @@ class Stream extends Model
         $topgames = self::topGames();
         $gamestreams = self::gameStreams();
         $gaptotop = self::leastStreamGapToTopStream();
+        $topstreams = self::getTopStreams();
+
         $stats = [
             'median' => $median,
             'topgames' => $topgames,
             'gamestreams' => $gamestreams,
-            'gaptotop'=>$gaptotop
+            'gaptotop'=>$gaptotop,
+            'topstreams' => $topstreams
         ];
+
         return $stats;
     }
 
@@ -124,6 +128,20 @@ class Stream extends Model
             ];
         } catch (\Exception $exception) {
             Log::error("STREAM GAP TO TOP STATS FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function getTopStreams() {
+        try {
+            $topstreams = DB::table('streams')
+                ->select(DB::raw('title, viewer_count, game_name'))
+                ->orderBy('viewer_count', 'DESC')
+                ->limit(10)
+                ->get()->toArray();
+            return $topstreams;
+        } catch (\Exception $exception) {
+            Log::error("TOP STREAM STATS FAILED:- ". $exception->getMessage());
             return [];
         }
     }

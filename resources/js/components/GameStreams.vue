@@ -17,7 +17,6 @@ export default {
     <div class="card">
         <div class="card-body">
             <h5 class="card-title"># Streams per Game</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
             <div class="card-text">
                 <table class="table table-striped table-hover table-sm" style="font-size: 12px">
                     <thead>

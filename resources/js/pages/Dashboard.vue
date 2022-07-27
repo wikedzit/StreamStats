@@ -3,9 +3,11 @@ import ViewerMedian from "../components/ViewerMedian.vue";
 import TopGames from "../components/TopGames.vue";
 import GameStreams from "../components/GameStreams.vue";
 import StreamGapToTop from "../components/StreamGapToTop.vue";
+import TopStreams from "../components/TopStreams.vue";
 
 export default {
     components: {
+        TopStreams,
         StreamGapToTop,
         GameStreams,
         TopGames,
@@ -60,6 +62,11 @@ export default {
 
                 <div class="col-6">
                     <TopGames v-if="stats.topgames!=null" :topgames="stats.topgames"></TopGames>
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="col-12">
+                    <TopStreams v-if="stats.topstreams!=null" :topstreams="stats.topstreams"></TopStreams>
                 </div>
             </div>
         </div>
