@@ -62,11 +62,14 @@ class Stream extends Model
         $median = self::viewersMedian();
         $topgames = self::topGames();
         $gamestreams = self::gameStreams();
-        $gaptotop = self::leastStreamGapToTopStream();
         $topstreams = self::getTopStreams();
-        $followedstreams = self::userFollowedStreams();
-        $sharedtags = self::getSharedTags();
         $streamcounts = self::getStreamCountPerStartHour();
+
+        //Fetch User data once and reuse it
+        $data = User::getFollowing();
+        $gaptotop = self::leastStreamGapToTopStream($data);
+        $followedstreams = self::userFollowedStreams($data);
+        $sharedtags = self::getSharedTags($data);
 
         $stats = [
             'median' => $median,
@@ -123,10 +126,12 @@ class Stream extends Model
         }
     }
 
-    public static function leastStreamGapToTopStream() {
+    public static function leastStreamGapToTopStream($data=null) {
         try {
+            if(is_null($data)){
+                $data = User::getFollowing();
+            }
             $topViewCounts = DB::table('streams')->min('viewer_count');
-            $data = Stream::loadStreams(true,100,[],"", true);
             $followedStream = end($data);
             return [
                 'title' => $followedStream['title'],
@@ -152,9 +157,11 @@ class Stream extends Model
         }
     }
 
-    public static function userFollowedStreams() {
+    public static function userFollowedStreams($data=null) {
         try {
-            $data = Stream::loadStreams(true,100,[],"", true);
+            if(is_null($data)){
+                $data = User::getFollowing();
+            }
             $keys = array_keys($data);
             $results = Stream::whereIn('stream_id', $keys)->get()->toArray();
             return $results;
@@ -164,9 +171,11 @@ class Stream extends Model
         }
     }
 
-    public static function getSharedTags() {
+    public static function getSharedTags($data=null) {
         try {
-            $data = Stream::loadStreams(true,100,[],"", true);
+            if(is_null($data)){
+                $data = User::getFollowing();
+            }
             $userTags = [];
             foreach($data as $datum) {
                 if (!empty($datum['tag_ids'])) {
