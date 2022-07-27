@@ -45,7 +45,7 @@
         ],
         "post-root-package-install": [
             "@php -r \"file_exists('.env') || copy('.env.example', '.env');\"",
-            "@php -r \"file_exists('storage/logs/laravel.log') || touch('laravel.log');\""
+            "@php -r \"file_exists('storage/logs/laravel.log') || touch('storage/logs/laravel.log');\""
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
