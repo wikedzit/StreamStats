@@ -4,7 +4,13 @@ import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
     plugins: [
-        vue(),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: '/'
+                },
+            },
+        }),
         laravel({
             input: [
                 'resources/css/app.css',
@@ -13,7 +19,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    server: {
-        https: true
-    },
 });
