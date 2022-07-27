@@ -18,7 +18,7 @@ trait LoadStreams
                 return $output;
             }
             $page_size = ($remaining <= TWITCH_PAGE_SIZE) ? $remaining : TWITCH_PAGE_SIZE;
-            $response = Twitch::loadStreams($page_size, $cursor);
+            $response = Twitch::loadStreams($isFollowed, $page_size, $cursor);
 
             $content = $response->json();
             if (!empty($content['data'])) {
