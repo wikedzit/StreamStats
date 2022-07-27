@@ -64,6 +64,7 @@ class Stream extends Model
         $gamestreams = self::gameStreams();
         $gaptotop = self::leastStreamGapToTopStream();
         $topstreams = self::getTopStreams();
+        $followedstreams = self::userFollowedStreams();
 
         $stats = [
             'median' => $median,
@@ -142,6 +143,18 @@ class Stream extends Model
             return $topstreams;
         } catch (\Exception $exception) {
             Log::error("TOP STREAM STATS FAILED:- ". $exception->getMessage());
+            return [];
+        }
+    }
+
+    public static function userFollowedStreams() {
+        try {
+            $data = Stream::loadStreams(true,100,[],"", true);
+            $keys = array_keys($data);
+            $results = Stream::whereIn('stream_id', $keys)->get()->toArray();
+            return $results;
+        } catch (\Exception $exception) {
+            Log::error("USER FOLLOWED STREAM STATS FAILED:- ". $exception->getMessage());
             return [];
         }
     }

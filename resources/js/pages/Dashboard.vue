@@ -4,9 +4,11 @@ import TopGames from "../components/TopGames.vue";
 import GameStreams from "../components/GameStreams.vue";
 import StreamGapToTop from "../components/StreamGapToTop.vue";
 import TopStreams from "../components/TopStreams.vue";
+import UserFollowedStream from "../components/UserFollowedStream.vue";
 
 export default {
     components: {
+        UserFollowedStream,
         TopStreams,
         StreamGapToTop,
         GameStreams,
@@ -33,7 +35,6 @@ export default {
                 }
             })
                 .then(response => {
-                    console.log(response.data);
                     this.setStats(response.data);
                 });
         },
@@ -48,11 +49,18 @@ export default {
         <div class="container w-70">
             <h3>DashBoard</h3>
             <div class="row align-items-md-stretch">
+
                 <div class="col-md-6">
-                    <ViewerMedian v-if="stats.median!=null" :median="stats.median"></ViewerMedian>
+                    <div class="h-100 p-3 rounded-3">
+                        <ViewerMedian v-if="stats.median!=null" :median="stats.median"></ViewerMedian>
+                        <StreamGapToTop class="mt-4" v-if="stats.gaptotop!=null" :gapdata="stats.gaptotop"></StreamGapToTop>
+                    </div>
                 </div>
                 <div class="col-md-6">
-                    <StreamGapToTop v-if="stats.gaptotop!=null" :gapdata="stats.gaptotop"></StreamGapToTop>
+                    <div class="h-100 p-2 bg-light border rounded-3">
+                        <UserFollowedStream v-if="stats.followedstreams!=null" :followedstreams="stats.followedstreams">
+                        </UserFollowedStream>
+                    </div>
                 </div>
             </div>
             <div class="row pt-3">
