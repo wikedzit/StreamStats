@@ -58,6 +58,12 @@ class Stream extends Model
         }
     }
 
+    public static function getStats() {
+        $median = self::viewersMedian();
+        $stats = array_merge([], $median);
+        return $stats;
+    }
+
     // TODO move all the queries in this controller to a Trait/Model to keep it thin
     public static function gamesStats() {
         try {

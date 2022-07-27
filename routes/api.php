@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\SocialAuthController;
+use App\Http\Controllers\StreamStatsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +17,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::controller(SocialAuthController::class)->group(function(){
     Route::get("auth/callback", "callback");
+});
+
+Route::controller(StreamStatsController::class)->group(function () {
+    Route::group(['prefix' => 'stats'], function () {
+        Route::get('/', 'getStats');
+    });
 });
