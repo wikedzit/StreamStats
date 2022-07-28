@@ -91,10 +91,11 @@ export default {
     <header class="p-3 mb-2 text-bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a class="navbar-brand" href="#">StreamStats</a>
+                <span class="navbar-brand">
+                    <img :src="'/images/streamstats.png'" style="height: 40px">
+                </span>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2 text-secondary">My Stats</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">StreamLabs</a></li>
                     <li><a href="#" class="nav-link px-2 text-white">Twitch</a></li>
                 </ul>
@@ -106,10 +107,7 @@ export default {
         </div>
     </header>
     <div class="container h-100 d-flex justify-content-center align-items-center">
-        <div class="container w-70">
-            <h3>DashBoard</h3>
-            <button @click="logout"  class="btn btn-primary">Logout</button>
-            <hr>
+        <div class="container w-70 pt-3">
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 rounded-3">
