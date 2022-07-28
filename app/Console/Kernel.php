@@ -20,7 +20,9 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('stream:update')->everyFifteenMinutes();
+        $schedule->command('stream:update')
+            ->everyFifteenMinutes()
+            ->withoutOverlapping();
     }
 
     /**

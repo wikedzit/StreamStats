@@ -30,12 +30,9 @@ class UpdateStream extends Command
      */
     public function handle()
     {
-
         $this->info(" ***** Start Updating Stream data ****");
         $limit = $this->option('limit');
-        if (is_integer($limit)) {
-            $limit = 1000;
-        }
+        $limit = is_integer($limit) ? $limit:1000;
         $shuffle = empty($this->option('no-shuffle'));
         Stream::updateStreamRecords($limit, $shuffle);
         $this->info(" ***** End Updating Stream data ****");
