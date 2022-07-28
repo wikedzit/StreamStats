@@ -178,7 +178,7 @@ export default {
                     </div>
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Followed Streams</h5>
+                            <h5 class="card-title">Followed Streams listed in Top 1000</h5>
                             <div class="card-text">
                                 <UserFollowedStream v-if="stats.followedstreams!=null" :followedstreams="stats.followedstreams">
                                 </UserFollowedStream>
