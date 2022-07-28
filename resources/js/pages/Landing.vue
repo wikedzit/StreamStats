@@ -15,7 +15,10 @@
                         <p class="col-md-8 fs-4">
                             Have a quick look at how the channels you watch compare to the top 1000 Twitch live streams.
                         </p>
-                        <a :href="getRedirectUrl()" class="btn btn-primary btn-lg" type="button">Sign in with Twitch</a>
+                        <a v-if="!loading" :href="getRedirectUrl()" class="btn btn-primary btn-lg" type="button">Sign in with Twitch</a>
+                        <div  v-if="loading" class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
                     </div>
                 </div>
 
@@ -45,6 +48,7 @@ export default {
     data() {
         return {
             error: null,
+            loading: false,
             twitch_auth_creds: {
                 response_type: 'code',
                 client_id: import.meta.env.VITE_TWITCH_CLIENT_ID,

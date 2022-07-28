@@ -222,17 +222,26 @@ class Stream extends Model
         }
     }
 
-    public static function getTagNames(array $tags=[]) {
-        if (empty($tags)) {
+    public static function getTagNames(array $tagsIds=[]) {
+        try {
+            if (empty($tagsIds)) {
+                return [];
+            }
+            $tagsNames=[];
+            $processed = 0;
+            do {
+                $tags100 = array_slice($tagsIds, $processed, 100);
+                $tags = Twitch::getTagDetails($tags100);
+                foreach ($tags as $tag) {
+                    // TODO is is important to fist identify user localization so that tag names could reflect that
+                    $tagsNames[] = $tag["localization_names"]["en-us"] ?? "";
+                }
+                $processed+= count($tags100);
+            } while($processed< count($tagsIds));
+            return $tagsNames;
+        } catch (\Exception $exception) {
+            Log::error("GET TAG NAMES FAILED:- ". $exception->getMessage());
             return [];
         }
-        $tags100 = array_slice($tags, 0, 100);
-        $tags = Twitch::getTagDetails($tags100);
-        $tagsNames=[];
-        foreach ($tags as $tag) {
-            // TODO is is important to fist identify user localization so that tag names could reflect that
-            $tagsNames[] = $tag["localization_names"]["en-us"] ?? "";
-        }
-        return $tagsNames;
     }
 }

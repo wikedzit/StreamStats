@@ -57,8 +57,8 @@ class SocialAuthController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
             Twitch::revokeAccessToken($user->access_token);
-            Auth::logout();
         }
+        Auth::logout();
         return response()->json(['message'=>'Session Closed'], 200);
     }
 }

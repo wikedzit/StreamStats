@@ -26,7 +26,6 @@ export default {
     },
     created() {
         this.stream_counts = this.streamcounts;
-        console.log(this.stream_counts);
     },
     methods: {
     }

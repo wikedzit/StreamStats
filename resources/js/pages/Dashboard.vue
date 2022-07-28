@@ -7,6 +7,7 @@ import TopStreams from "../components/TopStreams.vue";
 import UserFollowedStream from "../components/UserFollowedStream.vue";
 import SharedTags from "../components/SharedTags.vue";
 import StreamHourCount from "../components/StreamHourCount.vue";
+import {ref} from "vue";
 
 export default {
     components: {
@@ -19,6 +20,12 @@ export default {
         TopGames,
         ViewerMedian,
     },
+
+    setup () {
+        const avatar = ref(localStorage.useravatar);
+        return {avatar}
+    },
+
     data() {
         return {
             received_data: null,
@@ -72,6 +79,7 @@ export default {
             })
                 .then(response => {
                     this.processLogout();
+                    window.location.href = 'home';
                     router.push({name: 'home'});
                 }).catch(error => {
                 this.processLogout();
@@ -108,6 +116,7 @@ export default {
     </header>
     <div class="container h-100 d-flex justify-content-center align-items-center">
         <div class="container w-70 pt-3">
+            <img :src="avatar" style="width: 100px" class="mb-3">
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 rounded-3">
