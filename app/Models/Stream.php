@@ -195,7 +195,7 @@ class Stream extends Model
                     $topTags=array_merge($topTags, $datum['tag_ids']);
                 }
             }
-            $sharedTags = array_intersect($topTags, $userTags);
+            $sharedTags = array_intersect($userTags, $topTags);
             return $sharedTags;
         } catch (\Exception $exception) {
             Log::error("SHARED TAGS STATS FAILED:- ". $exception->getMessage());
