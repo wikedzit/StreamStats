@@ -22,45 +22,44 @@ export default {
     },
 
     setup () {
-        const avatar = ref(localStorage.useravatar);
-        return {avatar}
+        if(!localStorage.getItem('usertoken')) {
+            window.location.href = "/";
+        }
+        const avatar = ref(localStorage.getItem('useravatar'));
+        return {avatar }
     },
 
     data() {
         return {
-            received_data: null,
             stats:{},
             interval: null,
         }
     },
+
     created() {
-        clearInterval(this.interval);
-        const isLoggedIn = localStorage.usertoken !== "";
-        if(!isLoggedIn) {
-            router.push({name: 'home'})
-        }
-       this.loadStats();
-       // this.interval = setInterval(() => {
-       //     this.loadStats();
-       // }, 1000);
+        this.loadStats();
     },
     deactivated() {
         clearInterval(this.interval);
     },
+
     methods: {
        loadStats() {
-            const base_url = import.meta.env.VITE_BASE_URL
-            const url = base_url+"/api/stats";
-            this.received_data = null;
-            axios.get(url,{
-                headers:{
-                    Authorization: `Bearer ${localStorage.usertoken}`,
-                    'Content-Type': 'application/json'
-                }
-            })
+            axios
+                .get("/api/stats",{
+                    headers:{
+                        Authorization: `Bearer ${localStorage.usertoken}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
                 .then(response => {
                     this.setStats(response.data);
-                });
+                })
+                .catch(error=>{
+                    if (error.response.status === 401) {
+                        this.processLogout();
+                    }
+                })
         },
 
         setStats(stats) {
@@ -68,28 +67,24 @@ export default {
         },
 
         logout() {
-            const base_url = import.meta.env.VITE_BASE_URL
-            const url = base_url+"/api/auth/logout";
-            console.log(url);
-            axios.post(url,{
+            axios
+                .post("/api/auth/logout",{
                 headers:{
                     Authorization: `Bearer ${localStorage.usertoken}`,
                     'Content-Type': 'application/json'
                 }
-            })
+                })
                 .then(response => {
                     this.processLogout();
-                    router.push({name: 'home'});
                 }).catch(error => {
                 this.processLogout();
-                router.push({name: 'home'});
             });
         },
 
         processLogout() {
-            localStorage.setItem('usertoken', "");
-            localStorage.setItem('useravatar', "");
-            console.log("====");
+            localStorage.removeItem('usertoken');
+            localStorage.removeItem('useravatar');
+            window.location.href = '/';
         }
     }
 }
@@ -108,7 +103,7 @@ export default {
                 </ul>
 
                 <div class="text-end">
-                    <button type="button" class="btn btn-warning">Logout</button>
+                    <button @click="logout" type="button" class="btn btn-warning">Logout</button>
                 </div>
             </div>
         </div>
