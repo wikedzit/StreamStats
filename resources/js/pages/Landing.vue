@@ -59,6 +59,12 @@ export default {
         }
     },
 
+    beforeCreate() {
+        if(localStorage.getItem('usertoken')) {
+            router.push({name: 'dashboard'})
+        }
+    },
+
     created() {
         const isLoggedIn = localStorage.usertoken !== "";
         if(isLoggedIn) {

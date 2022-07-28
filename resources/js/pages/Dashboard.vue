@@ -21,11 +21,13 @@ export default {
         ViewerMedian,
     },
 
-    setup () {
+    beforeCreate() {
         if(!localStorage.getItem('usertoken')) {
             window.location.href = "/";
         }
+    },
 
+    setup () {
         const avatar = ref(localStorage.getItem('useravatar'));
         const username = ref(localStorage.getItem('username'));
         return {avatar, username}
@@ -141,10 +143,12 @@ export default {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 ">
                     <div class="h-100 rounded-3">
                         <div class="card bg-light col-12">
                             <div class="card-body">
+
+                                <h5 class="card-title text-primary"> Race to Top 1000 </h5>
                                 <StreamGapToTop v-if="stats.gaptotop!=null" :gapdata="stats.gaptotop"></StreamGapToTop>
                             </div>
                         </div>

@@ -15,9 +15,12 @@ export default {
 }
 </script>
 <template>
-    <h5 class="card-title">{{  gap_to_top.title }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">To top 1000 need</h6>
-    <div class="card-text">
-        <h1>{{  gap_to_top.gap }}</h1> more viewers
+    <div class="card-text hstack gap-1 p-0">
+        <div> <img :src="gap_to_top.thumbnail"></div>
+        <div class="">
+            <p class="lead fs-6">{{  gap_to_top.title }}</p>
+            <p v-if="gap_to_top.gap===0" class="btn btn-sm btn-success">Is in Top 1000 list</p>
+            <p v-else class="btn btn-sm btn-info">Needs {{  gap_to_top.gap }} to be in top 1000</p>
+        </div>
     </div>
 </template>

@@ -67,6 +67,8 @@ class Stream extends Model
         $streamcounts = self::getStreamCountPerStartHour();
 
         //Fetch User data once and reuse it
+        //THis way we dont have to run multiple calls to the API, but most importantly it keeps the data displayed
+        //in this three modules in sync.
         $data = User::getFollowing();
         $gaptotop = self::leastStreamGapToTopStream($data);
         $followedstreams = self::userFollowedStreams($data);
@@ -133,10 +135,21 @@ class Stream extends Model
                 $data = User::getFollowing();
             }
             $topViewCounts = DB::table('streams')->min('viewer_count');
+
+            //Since fetched streams comes in sorted in Desc, taking the last item
+            // means it has the smallest number of viewers
             $followedStream = end($data);
+
+            // NOTE: There is a possibility that the least followes stream is already in the top 1000 list
+            // We can tell this if the Gap is less that zero
+            $gap = $topViewCounts - $followedStream['viewer_count'] + 1;
+            // We have added 1 to gap value to atleast place this stream above the least stream in the top 1000
+            $img = $followedStream['thumbnail_url'];
+            $thumbnail = str_replace(["{width}", "{height}"],[100, 100], $img);
             return [
                 'title' => $followedStream['title'],
-                'gap' => $followedStream['viewer_count'] - $topViewCounts
+                'gap' => $gap > 0 ? $gap : 0,
+                'thumbnail' => $thumbnail
             ];
         } catch (\Exception $exception) {
             Log::error("STREAM GAP TO TOP STATS FAILED:- ". $exception->getMessage());
