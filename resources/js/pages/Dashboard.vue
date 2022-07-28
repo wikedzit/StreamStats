@@ -37,6 +37,7 @@ export default {
         return {
             stats:{},
             interval: null,
+            loading: false
         }
     },
 
@@ -49,6 +50,7 @@ export default {
 
     methods: {
        loadStats() {
+           this.loading =  true;
             axios
                 .get("/api/stats",{
                     headers:{
@@ -57,7 +59,14 @@ export default {
                     }
                 })
                 .then(response => {
-                    this.setStats(response.data);
+                    if (response.data.message === "loading") {
+                        const stats = JSON.parse(localStorage.getItem('stats'));
+                        console.log(stats);
+                        this.stats = stats
+                    }else {
+                        this.setStats(response.data);
+                    }
+                    this.loading = false;
                 })
                 .catch(error=>{
                     if (error.response.status === 401) {
@@ -68,6 +77,7 @@ export default {
 
         setStats(stats) {
             this.stats = stats
+            localStorage.setItem('stats', JSON.stringify(stats));
         },
 
         logout() {
@@ -89,6 +99,7 @@ export default {
             localStorage.removeItem('usertoken');
             localStorage.removeItem('useravatar');
             localStorage.removeItem('username');
+            localStorage.removeItem('stats');
             window.location.href = '/';
         }
     }
@@ -124,6 +135,10 @@ export default {
                 </p>
 
                 <div class="text-end">
+                    <button v-if="!loading" @click="loadStats" type="button" class="btn btn-primary m-2">Fetch Latest</button>
+                    <button v-if="loading" class="spinner-grow m-2 ml-4 text-primary border-0" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </button>
                     <button @click="logout" type="button" class="btn btn-warning">Logout</button>
                 </div>
             </div>

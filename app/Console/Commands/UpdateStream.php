@@ -4,6 +4,9 @@ namespace App\Console\Commands;
 
 use App\Models\Stream;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpdateStream extends Command
 {
@@ -30,12 +33,20 @@ class UpdateStream extends Command
      */
     public function handle()
     {
-        $this->info(" ***** Start Updating Stream data ****");
-        $limit = $this->option('limit');
-        $limit = is_integer($limit) ? $limit:1000;
-        $shuffle = empty($this->option('no-shuffle'));
-        Stream::updateStreamRecords($limit, $shuffle);
-        $this->info(" ***** End Updating Stream data ****");
-        return 0;
+        try {
+            config(['app.updating_streams'=> ""]);
+            Cache::put('updating_streams',true);
+            $this->info(" ***** Start Updating Stream data ****");
+            $limit = $this->option('limit');
+            $limit = is_integer($limit) ? $limit:1000;
+            $shuffle = empty($this->option('no-shuffle'));
+            Stream::updateStreamRecords($limit, $shuffle);
+            Cache::put('updating_streams',false);
+            $this->info(" ***** End Updating Stream data ****");
+            return 1;
+        } catch (\Exception $exception) {
+            Log::error("Command Stream:update FAILED:- ". $exception->getMessage());
+            return 0;
+        }
     }
 }

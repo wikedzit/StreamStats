@@ -28,7 +28,7 @@ class Stream extends Model
     public static function updateStreamRecords(int $totalRecord=1000, bool $shuffle=true) {
         try {
             // TODO it might be a good idea to notify consumers of this data that something is happening
-            //Stream::truncate();
+            Stream::truncate();
 
             $data = Stream::loadStreams(false, $totalRecord);
             if ($shuffle && is_array($data)) {
