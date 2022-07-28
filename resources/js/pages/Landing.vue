@@ -54,6 +54,13 @@ export default {
         }
     },
 
+    created() {
+        const isLoggedIn = localStorage.usertoken !== "";
+        if(isLoggedIn) {
+            //router.push({name: 'dashboard'})
+        }
+    },
+
     mounted() {
         const access_details = document.location.search;
         if (access_details) {
@@ -62,6 +69,8 @@ export default {
             this.loading = true;
             axios.get(callback)
                 .then(response => {
+                    this.loading = false;
+                    this.processLogin(response.data);
                     router.push({name: 'dashboard'})
                 })
                 .catch(error => console.log(error))
@@ -74,6 +83,12 @@ export default {
             const params = new URLSearchParams(this.twitch_auth_creds).toString();
             return url+"?"+ params;
         },
+
+        processLogin(data) {
+            localStorage.setItem('usertoken', data.access_token)
+            localStorage.setItem('useravatar', data.avatar);
+            router.push({name: 'dashboard'})
+        }
     }
 }
 </script>

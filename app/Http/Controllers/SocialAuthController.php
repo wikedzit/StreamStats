@@ -39,8 +39,9 @@ class SocialAuthController extends Controller
             Auth::login($user);
             $token = JWT::encode($tokenPayload, config('auth.jwt.key'), 'HS256');
             $payload = [
-                'user'          => $user->getProfile(),
+                'username'      => $user->name,
                 'access_token'  => $token,
+                'avatar'        => $user->avatar
             ];
 
             return response()->json($payload, 200);

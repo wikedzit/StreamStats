@@ -21,17 +21,30 @@ export default {
     },
     data() {
         return {
-            stats:{}
+            received_data: null,
+            stats:{},
+            interval: null,
         }
     },
     created() {
-        this.loadStats();
+        clearInterval(this.interval);
+        const isLoggedIn = localStorage.usertoken !== "";
+        if(!isLoggedIn) {
+            router.push({name: 'home'})
+        }
+       this.loadStats();
+       // this.interval = setInterval(() => {
+       //     this.loadStats();
+       // }, 1000);
     },
-
+    deactivated() {
+        clearInterval(this.interval);
+    },
     methods: {
        loadStats() {
             const base_url = import.meta.env.VITE_BASE_URL
             const url = base_url+"/api/stats";
+            this.received_data = null;
             axios.get(url,{
                 headers:{
                     Authorization: `Bearer ${localStorage.usertoken}`,
@@ -42,8 +55,34 @@ export default {
                     this.setStats(response.data);
                 });
         },
+
         setStats(stats) {
-            this.stats = stats;
+            this.stats = stats
+        },
+
+        logout() {
+            const base_url = import.meta.env.VITE_BASE_URL
+            const url = base_url+"/api/auth/logout";
+            console.log(url);
+            axios.post(url,{
+                headers:{
+                    Authorization: `Bearer ${localStorage.usertoken}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    this.processLogout();
+                    router.push({name: 'home'});
+                }).catch(error => {
+                this.processLogout();
+                router.push({name: 'home'});
+            });
+        },
+
+        processLogout() {
+            localStorage.setItem('usertoken', "");
+            localStorage.setItem('useravatar', "");
+            console.log("====");
         }
     }
 }
@@ -52,9 +91,11 @@ export default {
     <div class="container h-100 d-flex justify-content-center align-items-center">
         <div class="container w-70">
             <h3>DashBoard</h3>
+            <button @click="logout"  class="btn btn-primary">Logout</button>
+            <hr>
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
-                    <div class="h-100 p-3 pt-0 rounded-3">
+                    <div class="h-100 rounded-3">
                         <div class="card bg-info col-12">
                             <div class="card-body">
                                 <h5 class="card-title">Stream Viewers</h5>

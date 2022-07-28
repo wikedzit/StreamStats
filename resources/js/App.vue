@@ -11,6 +11,8 @@
             return {
             }
         },
+        created() {
+        },
         methods: {
         }
     }
