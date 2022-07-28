@@ -28,7 +28,7 @@ class Stream extends Model
     public static function updateStreamRecords(int $totalRecord=1000, bool $shuffle=true) {
         try {
             // TODO it might be a good idea to notify consumers of this data that something is happening
-            Stream::truncate();
+            //Stream::truncate();
 
             $data = Stream::loadStreams(false, $totalRecord);
             if ($shuffle && is_array($data)) {
@@ -40,19 +40,14 @@ class Stream extends Model
                 } else {
                     $tag_id = $datum['tag_ids'];
                 }
-                $row = [
-                    'stream_id'     => $datum['stream_id'],
-                    'game_name'     => $datum['game_name'],
-                    'title'         => $datum['title'],
-                    'viewer_count'  => $datum['viewer_count'],
-                    'channel_name'  => "",
-                    'started_at'    => $datum['started_at'],
-                    'tag_ids'       => $tag_id
-                ];
-
-                // NOTE this process could be differed to a parallel Pool making a good number of parallel Queries to the DB
-                // this could optimize the performance but
-                Stream::create($row);
+                // It is still efficient to search by stream id because it is indexed
+                $stream = Stream::firstOrNew(['stream_id'=> $datum['stream_id']]);
+                $stream->game_name = $datum['game_name'];
+                $stream->title = $datum['title'];
+                $stream->viewer_count = $datum['viewer_count'];
+                $stream->started_at = $datum['started_at'];
+                $stream->tag_ids = $tag_id;
+                $stream->save();
             }
         } catch (\Exception $exception) {
             Log::error("StreamRecordsUpdate FAILED:- ". $exception->getMessage());
