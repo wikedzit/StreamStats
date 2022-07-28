@@ -91,6 +91,7 @@ export default {
         processLogin(data) {
             localStorage.setItem('usertoken', data.access_token)
             localStorage.setItem('useravatar', data.avatar);
+            localStorage.setItem('username', data.username);
             router.push({name: 'dashboard'})
         }
     }

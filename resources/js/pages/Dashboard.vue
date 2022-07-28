@@ -26,7 +26,8 @@ export default {
             window.location.href = "/";
         }
         const avatar = ref(localStorage.getItem('useravatar'));
-        return {avatar }
+        const username = ref(localStorage.getItem('username'));
+        return {avatar, username }
     },
 
     data() {
@@ -84,23 +85,37 @@ export default {
         processLogout() {
             localStorage.removeItem('usertoken');
             localStorage.removeItem('useravatar');
+            localStorage.removeItem('username');
             window.location.href = '/';
         }
     }
 }
 </script>
 <template>
-    <header class="p-3 mb-2 text-bg-dark">
-        <div class="container">
-            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <span class="navbar-brand">
-                    <img :src="'/images/streamstats.png'" style="height: 40px">
-                </span>
+    <header>
+        <div class="px-3 py-2 text-bg-dark">
+            <div class="container">
+                <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                    <span class="d-flex align-items-center my-2 my-lg-0 me-lg-auto">
+                        <img :src="'/images/streamstats.png'" style="height: 40px">
+                    </span>
 
-                <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <li><a href="#" class="nav-link px-2 text-white">StreamLabs</a></li>
-                    <li><a href="#" class="nav-link px-2 text-white">Twitch</a></li>
-                </ul>
+                    <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                        <li>
+                            <a href="#" class="nav-link text-white">
+                                <img :src="avatar" class="bi d-block mx-auto mb-1"  width="30" height="30">
+                                {{ username }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="px-3 py-2 border-bottom mb-3">
+            <div class="container d-flex flex-wrap justify-content-center">
+                <p class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                    Your Twitch in Figures
+                </p>
 
                 <div class="text-end">
                     <button @click="logout" type="button" class="btn btn-warning">Logout</button>
@@ -110,7 +125,6 @@ export default {
     </header>
     <div class="container h-100 d-flex justify-content-center align-items-center">
         <div class="container w-70 pt-3">
-            <img :src="avatar" style="width: 100px" class="mb-3">
             <div class="row align-items-md-stretch">
                 <div class="col-md-6">
                     <div class="h-100 rounded-3">
