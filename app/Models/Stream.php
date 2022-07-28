@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Integrations\Twitch;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\LoadStreams;
@@ -196,7 +197,7 @@ class Stream extends Model
                 }
             }
             $sharedTags = array_intersect($userTags, $topTags);
-            return $sharedTags;
+            return self::getTagNames($sharedTags);
         } catch (\Exception $exception) {
             Log::error("SHARED TAGS STATS FAILED:- ". $exception->getMessage());
             return [];
@@ -219,5 +220,19 @@ class Stream extends Model
             Log::error("STREAM COUNT START HOUR STATS FAILED:- ". $exception->getMessage());
             return [];
         }
+    }
+
+    public static function getTagNames(array $tags=[]) {
+        if (empty($tags)) {
+            return [];
+        }
+        $tags100 = array_slice($tags, 0, 100);
+        $tags = Twitch::getTagDetails($tags100);
+        $tagsNames=[];
+        foreach ($tags as $tag) {
+            // TODO is is important to fist identify user localization so that tag names could reflect that
+            $tagsNames[] = $tag["localization_names"]["en-us"] ?? "";
+        }
+        return $tagsNames;
     }
 }

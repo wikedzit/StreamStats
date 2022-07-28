@@ -86,6 +86,37 @@ class Twitch
          return self::authorizeApp();
     }
 
+    public static function getTagDetails($tags=[]) {
+        try {
+            $headers = [
+                "Authorization" => "Bearer ". self::getAppAccessToken(),
+                'Client-Id'     =>  config('app.twitch.client_id')
+            ];
+
+            $url = sprintf("%s/tags/streams", config('app.twitch.helix_url'));
+            $taglist = "";
+            foreach ($tags as $tag) {
+                $taglist.=sprintf("tag_id=%s&", $tag);
+            }
+            $taglist = trim($taglist, '&');
+            $url = sprintf("%s?%s", $url,$taglist);
+            $response = Http::withHeaders($headers)->get($url);
+            if ($response->ok()) {
+                $tags = $response->json('data');
+                if (!empty($tags)) {
+                    return $tags;
+                } else {
+                    Log::warning("TAG DATA NOTFOUND:-", $response->body());
+                }
+            } else {
+                Log::error("TAG FETCH FAILED:". $response->body());
+            }
+        } catch (\Exception $exception) {
+            Log::error("TAG FETCH ERROR:". $exception->getMessage());
+        }
+        return [];
+    }
+
     public static function getStreams(string $endpoint, $headers=[], $params=[]) {
         try {
             $endpoint = trim($endpoint, "/");

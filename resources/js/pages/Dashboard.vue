@@ -183,11 +183,10 @@ export default {
                         </div>
                     </div>
                 </div>
-
                 <div class="col-6">
                     <div class="card">
                         <div class="card-body">
-                            <h5 class="card-title">Shared Tags</h5>
+                            <h5 class="card-title">Matching tags in top 1000 Streams</h5>
                             <div class="card-text">
                                 <SharedTags v-if="stats.sharedtags!=null" :sharedtags="stats.sharedtags"></SharedTags>
                             </div>
