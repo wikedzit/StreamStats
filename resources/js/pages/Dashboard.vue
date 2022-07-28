@@ -146,9 +146,9 @@ export default {
                     </div>
                 </div>
                 <div class="col-6">
-                    <div class="card mb-3">
+                    <div class="card mb-3 bg-dark">
                         <div class="card-body">
-                            <h5 class="card-title">Matching tags in top 1000 Streams</h5>
+                            <h5 class="card-title text-white">Matching tags in top 1000 Streams</h5>
                             <div class="card-text">
                                 <SharedTags v-if="stats.sharedtags!=null" :sharedtags="stats.sharedtags"></SharedTags>
                             </div>
@@ -167,7 +167,7 @@ export default {
             </div>
             <div class="row pt-3">
                 <div class="col-6">
-                    <div class="card">
+                    <div class="card bg-silver">
                         <div class="card-body">
                             <h5 class="card-title"># Streams per Game</h5>
                             <div class="card-text">
@@ -190,7 +190,7 @@ export default {
             </div>
             <div class="row pt-3">
                 <div class="col-12">
-                    <div class="card">
+                    <div class="card bg-warning">
                         <div class="card-body">
                             <h5 class="card-title">Tops Streams by Views</h5>
                             <div class="card-text">
