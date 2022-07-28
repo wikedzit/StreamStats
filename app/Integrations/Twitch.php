@@ -31,6 +31,25 @@ class Twitch
         return false;
     }
 
+    public static function revokeAccessToken(string $token) {
+        try {
+            $url = sprintf("%s/%s", config('app.twitch.auth_url'), 'revoke');
+            $credentials = [
+                'client_id' => config('app.twitch.client_id'),
+                'token'     =>  $token
+            ];
+            $response = Http::asForm()->post($url, $credentials);
+            if ($response->ok()) {
+                return true;
+            }
+            $message = "FAILED TO REVOKE ACCSS_TOKEN:- ". $response->body();
+        } catch (\Exception $exception) {
+            $message = "FAILED TO REVOKE ACCSS_TOKEN:-". $exception->getMessage();
+        }
+        Log::error($message);
+        return false;
+    }
+
     public static function authorizeApp() {
         try {
             $url = sprintf("%s/%s", config('app.twitch.auth_url'), 'token');

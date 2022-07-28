@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Integrations\Twitch;
 use App\Models\User;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
@@ -49,5 +50,14 @@ class SocialAuthController extends Controller
             Log::error("SocialAuthController: ". $exception->getMessage());
             return response()->json(['message' => 'Authentication Failed'], 200);
         }
+    }
+
+    public function logout() {
+        if (Auth::check()) {
+            $user = Auth::user();
+            Twitch::revokeAccessToken($user->access_token);
+            Auth::logout();
+        }
+        return response()->json(['message'=>'Session Closed'], 200);
     }
 }
