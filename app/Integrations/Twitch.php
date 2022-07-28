@@ -78,6 +78,14 @@ class Twitch
         }
     }
 
+    public static function getAppAccessToken() {
+         $token = config('app.twitch.token');
+         if(!empty($token)) {
+             return $token;
+         }
+         return self::authorizeApp();
+    }
+
     public static function getStreams(string $endpoint, $headers=[], $params=[]) {
         try {
             $endpoint = trim($endpoint, "/");
@@ -98,7 +106,7 @@ class Twitch
 
     public static function getGeneralStreams(int $first = 100, string $cursor="") {
         $headers = [
-            "Authorization" => "Bearer ". config('app.twitch.token'),
+            "Authorization" => "Bearer ". self::getAppAccessToken(),
             'Client-Id'     =>  config('app.twitch.client_id')
         ];
         $params = ["first" => $first];
