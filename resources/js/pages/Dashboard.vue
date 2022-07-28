@@ -79,7 +79,6 @@ export default {
             })
                 .then(response => {
                     this.processLogout();
-                    window.location.href = 'home';
                     router.push({name: 'home'});
                 }).catch(error => {
                 this.processLogout();
