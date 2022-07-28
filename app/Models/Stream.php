@@ -40,14 +40,18 @@ class Stream extends Model
                 } else {
                     $tag_id = $datum['tag_ids'];
                 }
-                // It is still efficient to search by stream id because it is indexed
-                $stream = Stream::firstOrNew(['stream_id'=> $datum['stream_id']]);
-                $stream->game_name = $datum['game_name'];
-                $stream->title = $datum['title'];
-                $stream->viewer_count = $datum['viewer_count'];
-                $stream->started_at = $datum['started_at'];
-                $stream->tag_ids = $tag_id;
-                $stream->save();
+
+                $row = [
+                    'stream_id'     => $datum['stream_id'],
+                    'game_name'     => $datum['game_name'],
+                    'title'         => $datum['title'],
+                    'viewer_count'  => $datum['viewer_count'],
+                    'channel_name'  => "",
+                    'started_at'    => $datum['started_at'],
+                    'tag_ids'       => $tag_id
+                ];
+
+                Stream::create($row);
             }
         } catch (\Exception $exception) {
             Log::error("StreamRecordsUpdate FAILED:- ". $exception->getMessage());
