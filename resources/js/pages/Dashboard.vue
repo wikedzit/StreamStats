@@ -25,9 +25,10 @@ export default {
         if(!localStorage.getItem('usertoken')) {
             window.location.href = "/";
         }
+
         const avatar = ref(localStorage.getItem('useravatar'));
         const username = ref(localStorage.getItem('username'));
-        return {avatar, username }
+        return {avatar, username}
     },
 
     data() {
@@ -91,6 +92,9 @@ export default {
     }
 }
 </script>
+<style>
+@import 'datatables.net-bs5';
+</style>
 <template>
     <header>
         <div class="px-3 py-2 text-bg-dark">
@@ -204,7 +208,7 @@ export default {
             </div>
             <div class="row pt-3">
                 <div class="col-12">
-                    <div class="card bg-warning">
+                    <div class="card bg-light">
                         <div class="card-body">
                             <h5 class="card-title">Tops Streams by Views</h5>
                             <div class="card-text">

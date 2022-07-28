@@ -23,7 +23,7 @@ export default {
         </thead>
         <tbody>
         <tr v-for="game in games">
-            <th scope="row">{{  game.game_name }}</th>
+            <th>{{  game.game_name }}</th>
             <td>{{  game.streams_count }}</td>
         </tr>
         </tbody>

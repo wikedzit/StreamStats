@@ -15,6 +15,6 @@ export default {
 </script>
 <template>
     <div class="card-text">
-        <h1>{{  viewer_median  }}</h1>
+        <h1 style="color: white">{{  viewer_median  }}</h1>
     </div>
 </template>

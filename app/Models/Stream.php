@@ -149,7 +149,7 @@ class Stream extends Model
             $topstreams = DB::table('streams')
                 ->select(DB::raw('title, viewer_count, game_name'))
                 ->orderBy('viewer_count', 'DESC')
-                ->limit(10)
+                ->limit(100)
                 ->get()->toArray();
             return $topstreams;
         } catch (\Exception $exception) {
