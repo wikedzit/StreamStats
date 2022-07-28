@@ -118,15 +118,40 @@ export default {
                                 <ViewerMedian v-if="stats.median!=null" :median="stats.median"></ViewerMedian>
                             </div>
                         </div>
-                        <div class="card bg-light col-12 mt-4">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="h-100 rounded-3">
+                        <div class="card bg-light col-12">
                             <div class="card-body">
                                 <StreamGapToTop v-if="stats.gaptotop!=null" :gapdata="stats.gaptotop"></StreamGapToTop>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="card h-100 p-2">
+            </div>
+
+            <div class="row pt-3">
+                <div class="col-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Stream Count Per Start Hour</h5>
+                            <div class="card-text">
+                                <StreamHourCount v-if="stats.streamcounts!=null" :streamcounts="stats.streamcounts"></StreamHourCount>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Matching tags in top 1000 Streams</h5>
+                            <div class="card-text">
+                                <SharedTags v-if="stats.sharedtags!=null" :sharedtags="stats.sharedtags"></SharedTags>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Followed Streams</h5>
                             <div class="card-text">
@@ -167,28 +192,6 @@ export default {
                             <h5 class="card-title">Tops Streams by Views</h5>
                             <div class="card-text">
                                 <TopStreams v-if="stats.topstreams!=null" :topstreams="stats.topstreams"></TopStreams>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row pt-3">
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Stream Count Per Start Hour</h5>
-                            <div class="card-text">
-                                <StreamHourCount v-if="stats.streamcounts!=null" :streamcounts="stats.streamcounts"></StreamHourCount>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Matching tags in top 1000 Streams</h5>
-                            <div class="card-text">
-                                <SharedTags v-if="stats.sharedtags!=null" :sharedtags="stats.sharedtags"></SharedTags>
                             </div>
                         </div>
                     </div>
