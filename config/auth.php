@@ -109,7 +109,8 @@ return [
     'password_timeout' => 10800,
 
     'jwt' => [
-        'key' => env('JWT_KEY')
+        'key' => env('JWT_KEY'),
+        'ttl' => env('JWT_TOKEN_TTL', 3600)
     ]
 
 ];

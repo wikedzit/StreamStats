@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Integrations\Twitch;
 use App\Models\User;
+use Carbon\Carbon;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -33,9 +34,10 @@ class SocialAuthController extends Controller
             $user->save();
 
             $tokenPayload = [
-                "user_id" => $user->twitch_id
+                "uid" => $user->twitch_id,
+                'iat' => time(),
+                'exp' => time() + config('auth.jwt.ttl')
             ];
-
             Auth::login($user);
             $token = JWT::encode($tokenPayload, config('auth.jwt.key'), 'HS256');
             $payload = [
