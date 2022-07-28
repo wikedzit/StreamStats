@@ -130,7 +130,7 @@ export default {
         </div>
         <div class="px-3 py-2 border-bottom mb-3">
             <div class="container d-flex flex-wrap justify-content-center">
-                <p class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
+                <p class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto lead"  style="color: #d162ff">
                     Your Twitch in Figures
                 </p>
 
