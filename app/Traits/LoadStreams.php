@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Integrations\Twitch;
+use Illuminate\Support\Facades\Log;
 
 define('TWITCH_PAGE_SIZE', 100);
 
@@ -42,6 +43,8 @@ trait LoadStreams
             return $output;
 
         } catch (\Exception $exception) {
+            Log::error("TRAIT Loadstream FAILED:- ". $exception->getMessage());
+            return [];
         }
     }
 }
