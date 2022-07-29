@@ -1,64 +1,94 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# StreamStats
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This application is aimed at helping Twitch viewers get a quick look at how the channels they watch compare to the top 1000 live streams. User will log into the application with a Twitch account via an OAuth
 
-## About Laravel
+## Getting Started
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+This API is built and runs on Laravel PHP and MySQL RDBMS and Vue3 with Vite. 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Prerequisites
+* MySQL DBMS ()
+* PHP >= 8.0
+* BCMath PHP Extension
+* Ctype PHP Extension
+* JSON PHP Extension
+* Mbstring PHP Extension
+* OpenSSL PHP Extension
+* PDO PHP Extension
+* Tokenizer PHP Extension
+* XML PHP Extension
+* Node
+* NPM
+* Vite
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Must have
+* [Composer](https://getcomposer.org/doc/00-intro.md) - PHP Package Manager
+* [Node](https://nodejs.org/en) - Node comes with Node Package Manager
 
-## Learning Laravel
+### Installing
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Follow these steps to download and setup the system
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* Clone this repo to your preferred environment
+```
+> git clone git@github.com:wikedzit/StreamStats.git
+```
 
-## Laravel Sponsors
+* Use composer and NPM to install all the Laravel dependencies required for this system to run
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```
+> cd streamstats
+> composer install
+> npm install
+```
 
-### Premium Partners
+Once the installation has finished, you will have all the tools you need to complete the setup.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+* First you have to make sure the configurations are set right. All the configuration for this system must be placed
+in a __.env__ file. Create this file (if not existing) and copy all the contents of __.env.example__ to this file
 
-## Contributing
+* This command should do just fine
+```
+> cp env.example .env
+```
+Then replace all the configuration keys with the right values as per your environment
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+* DB keys
+```
+DB_CONNECTION=mysql //If you have used a different RDBM e.g postgres or any, replace this with the right value
+DB_HOST=127.0.0.1 // Host server
+DB_PORT=3306 // DB port
+DB_DATABASE=streamstats //Datavase name for this system (YOu can name it anything you want on your local machine)
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-## Code of Conduct
+* API Client Keys. In a development environment these can be left with their default value, but in a production environment the right set of keys should be used. 
+```
+JWT_KEY=
+JWT_TOKEN_TTL=3600
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+* Once all the keys have been set, install all the tables and default data by using Laravel commands
+* This command will install all the tables and default API client required to make API calls
+* Check _app/database/migrations_ to see the list of tables that the system have
 
-## Security Vulnerabilities
+```
+> php artisan migrate --seed
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+At this point, you have everything set for the system to run locally on your machine,
 
-## License
+### Running the system on your local environment
+* An easy way to run the system is by using Laravel built in command.
+* By default this command will launch the app at http://127.0.0.1:800X 
+```
+> php artisan serve
+> npm run dev
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### TODO ITEMS
+* Add test cases for the app
+* Review and add appropriate error checks
+* Update this README for more detailed instructions about the application
+* Improve on State management on the front app. Use of proper states manager is a great idea
