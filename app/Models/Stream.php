@@ -27,13 +27,17 @@ class Stream extends Model
 
     public static function updateStreamRecords(int $totalRecord=1000, bool $shuffle=true) {
         try {
-            // TODO it might be a good idea to notify consumers of this data that something is happening
-            Stream::truncate();
-
             $data = Stream::loadStreams(false, $totalRecord);
+            $stream_ids = array_keys($data);
+
+            // Delete all records not in the current list
+            Stream::whereNotIn('stream_id', $stream_ids)->delete();
+
             if ($shuffle && is_array($data)) {
                 shuffle($data);
             }
+
+            // At this poitnt we are sure that all the records would eith be updated or added but we wont exceed limit
             foreach ($data as $datum) {
                 if (is_array($datum['tag_ids'])) {
                     $tag_id = implode(",", $datum['tag_ids']);
@@ -41,17 +45,13 @@ class Stream extends Model
                     $tag_id = $datum['tag_ids'];
                 }
 
-                $row = [
-                    'stream_id'     => $datum['stream_id'],
-                    'game_name'     => $datum['game_name'],
-                    'title'         => $datum['title'],
-                    'viewer_count'  => $datum['viewer_count'],
-                    'channel_name'  => "",
-                    'started_at'    => $datum['started_at'],
-                    'tag_ids'       => $tag_id
-                ];
-
-                Stream::create($row);
+                $stream = Stream::firstOrNew(['stream_id' => $datum['stream_id']]);
+                $stream->game_name =  $datum['game_name'];
+                $stream->title =  $datum['title'];
+                $stream->viewer_count =  $datum['viewer_count'];
+                $stream->started_at =  $datum['started_at'];
+                $stream->tag_ids =  $tag_id;
+                $stream->save();
             }
         } catch (\Exception $exception) {
             Log::error("StreamRecordsUpdate FAILED:- ". $exception->getMessage());

@@ -34,11 +34,12 @@ class UpdateStream extends Command
     public function handle()
     {
         try {
-            config(['app.updating_streams'=> ""]);
             Cache::put('updating_streams',true);
             $this->info(" ***** Start Updating Stream data ****");
+
             $limit = $this->option('limit');
-            $limit = is_integer($limit) ? $limit:1000;
+            $limit = intval($limit) > 0 ? $limit :1000;
+
             $shuffle = empty($this->option('no-shuffle'));
             Stream::updateStreamRecords($limit, $shuffle);
             Cache::put('updating_streams',false);
