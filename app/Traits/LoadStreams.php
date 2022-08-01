@@ -32,6 +32,11 @@ trait LoadStreams
                     }
                 }
             }
+            //This means we pulled data that is less that what we asked for
+            // This indicates that, the source has less to offer than what we asked for
+            if (empty($content['data']) || count($content['data']) < $page_size) {
+                return $output;
+            }
 
             $row_count = count($output);
             if (($row_count < $totalRecords || $fetchAll) && isset($content['pagination']) && !empty($content['pagination']['cursor'])) {
