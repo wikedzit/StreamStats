@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Integrations\Twitch;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\LoadStreams;
@@ -36,8 +37,24 @@ class Stream extends Model
                 shuffle($data);
             }
 
+            $prepedData = [];
+            foreach ($data as $datum) {
+                if (is_array($datum['tag_ids'])) {
+                    $tag_ids = implode(",", $datum['tag_ids']);
+                } else {
+                    $tag_ids = $datum['tag_ids'];
+                }
+                $prepedData[] = [
+                    'stream_id' =>  $datum['stream_id'],
+                    'title' => $datum['title'],
+                    'game_name' => $datum['game_name'],
+                    'viewer_count' => $datum['viewer_count'],
+                    'tag_ids' => $tag_ids,
+                    'started_at' => (new Carbon($datum['started_at']))->format('Y-m-d H:m:s')
+                ];
+            }
             Stream::upsert(
-                $data,
+                $prepedData,
                 ['stream_id'],
                 ['game_name','title', 'viewer_count','started_at', 'tag_ids']
             );

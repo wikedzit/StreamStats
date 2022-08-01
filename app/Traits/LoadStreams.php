@@ -24,23 +24,11 @@ trait LoadStreams
 
             $content = $response->json();
             if (!empty($content['data'])) {
-                $count_unique = 0;
                 foreach ($content['data'] as $datum) {
                     $stream_id = sprintf("%s-%s", $datum['user_id'], $datum['game_id']);
                     if (!empty($stream_id) && !isset($output[$stream_id])) {
-                        if (is_array($datum['tag_ids'])) {
-                            $tag_id = implode(",", $datum['tag_ids']);
-                        } else {
-                            $tag_id = $datum['tag_ids'];
-                        }
-                        $output[$stream_id] = [
-                            'stream_id' =>  $stream_id,
-                            'title' => $datum['title'],
-                            'game_name' => $datum['game_name'],
-                            'viewer_count' => $datum['viewer_count'],
-                            'tag_ids' => $tag_id,
-                            'started_at' => (new Carbon($datum['started_at']))->format('Y-m-d H:m:s')
-                        ];
+                        $datum['stream_id'] = $stream_id;
+                        $output[$stream_id] = $datum;
                     }
                 }
             }
