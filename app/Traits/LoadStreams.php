@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Integrations\Twitch;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 define('TWITCH_PAGE_SIZE', 100);
@@ -27,9 +28,19 @@ trait LoadStreams
                 foreach ($content['data'] as $datum) {
                     $stream_id = sprintf("%s-%s", $datum['user_id'], $datum['game_id']);
                     if (!empty($stream_id) && !isset($output[$stream_id])) {
-                        $datum['stream_id'] = $stream_id;
-                        $output[$stream_id] = $datum;
-                        $count_unique++;
+                        if (is_array($datum['tag_ids'])) {
+                            $tag_id = implode(",", $datum['tag_ids']);
+                        } else {
+                            $tag_id = $datum['tag_ids'];
+                        }
+                        $output[$stream_id] = [
+                            'stream_id' =>  $stream_id,
+                            'title' => $datum['title'],
+                            'game_name' => $datum['game_name'],
+                            'viewer_count' => $datum['viewer_count'],
+                            'tag_ids' => $tag_id,
+                            'started_at' => (new Carbon($datum['started_at']))->format('Y-m-d H:m:s')
+                        ];
                     }
                 }
             }

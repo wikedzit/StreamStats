@@ -18,7 +18,7 @@ class Stream extends Model
     protected $keyType      = 'string';
 
     protected $dates = [
-        'started_at'
+        //'started_at'
     ];
 
     protected $fillable = [
@@ -32,27 +32,15 @@ class Stream extends Model
 
             // Delete all records not in the current list
             Stream::whereNotIn('stream_id', $stream_ids)->delete();
-
             if ($shuffle && is_array($data)) {
                 shuffle($data);
             }
 
-            // At this poitnt we are sure that all the records would eith be updated or added but we wont exceed limit
-            foreach ($data as $datum) {
-                if (is_array($datum['tag_ids'])) {
-                    $tag_id = implode(",", $datum['tag_ids']);
-                } else {
-                    $tag_id = $datum['tag_ids'];
-                }
-
-                $stream = Stream::firstOrNew(['stream_id' => $datum['stream_id']]);
-                $stream->game_name =  $datum['game_name'];
-                $stream->title =  $datum['title'];
-                $stream->viewer_count =  $datum['viewer_count'];
-                $stream->started_at =  $datum['started_at'];
-                $stream->tag_ids =  $tag_id;
-                $stream->save();
-            }
+            Stream::upsert(
+                $data,
+                ['stream_id'],
+                ['game_name','title', 'viewer_count','started_at', 'tag_ids']
+            );
         } catch (\Exception $exception) {
             Log::error("StreamRecordsUpdate FAILED:- ". $exception->getMessage());
         }
